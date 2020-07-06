@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Select from 'react-select'
 const APIKEY = process.env.REACT_APP_API_KEY;
 
 export default class Form extends Component {
@@ -8,12 +8,21 @@ export default class Form extends Component {
     sol: '0',
     manifest: null,
     maxSol: '',
-    loading: 'true',
+    isLoading: true,
     data: null,
     page: 1,
     errors: { camera: "", sol: "" }
   }
-
+  options = [
+    { value: 'all', label: 'All' },
+    { value: 'FHAZ', label: 'Front Hazard Avoidance Camera' },
+    { value: 'RHAZ', label: 'Rear Hazard Avoidance Camera' },
+    { value: 'MAST', label: 'Mast Camera' },
+    { value: 'CHEMCAM', label: 'Chemistry and Camera Complex' },
+    { value: 'MAHLI', label: 'Mars Hand Lens Imager' },
+    { value: 'MARDI', label: 'Mars Descent Imager' },
+    { value: 'NAVCAM', label: 'Navigation Camera' },
+  ]
   async componentDidMount() {
     await this.getManifest();
     console.log('data loaded')
@@ -36,18 +45,21 @@ export default class Form extends Component {
       //this.setCameras(value);
     }
   }
+
   /*  setCameras = (v) => {
     for disabling inputs based on sol.
    } */
 
-  handleCamera = (e) => {
-    this.setState({ camera: e.target.value })
+  handleCamera = (selected) => {
+    console.log(selected)
+    this.setState({ camera: selected.value })
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({ isLoading: true });
     const { sol, camera } = this.state;
-
+    console.log("sol  " + sol, camera)
     let url = '';
 
     if (camera === 'all') {
@@ -62,20 +74,27 @@ export default class Form extends Component {
         this.setState({ data: resJson })
       }
       )
-
-    console.log("sol " + this.state.sol, "cam " + this.state.camera)
+      .then(this.setState({ isLoading: false }))
   }
 
   render() {
-    const { sol, camera, maxSol, data } = this.state;
-
+    const { sol, maxSol, data, isLoading } = this.state;
+    let info = '';
     return (
       <main>
-        Mars Curiosity Rover Photo Viewer
-        <div className="form">
-          <p>{`Sol (0 to ${maxSol})`}</p>
+        <h1>
+          Mars Curiosity Rover Photo Viewer
+        </h1>
+
+
+
+        <form>
+
+          <label htmlFor="sol">{`Sol (0 to ${maxSol})`}</label>
           <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol} />
-          <select name="camera" id="camera" value={camera} onChange={this.handleCamera}>
+
+          <label htmlFor="camera">Camera</label>
+          {/*  <select name="camera" id="camera" value={camera} onChange={this.handleCamera}>
             <option value="all">All</option>
             <option value="FHAZ">Front Hazard Avoidance Camera</option>
             <option value="RHAZ">Rear Hazard Avoidance Camera</option>
@@ -84,13 +103,30 @@ export default class Form extends Component {
             <option value="MAHLI">Mars Hand Lens Imager</option>
             <option value="MARDI">Mars Descent Imager</option>
             <option value="NAVCAM">Navigation Camera</option>
-          </select>
+          </select> */}
+
+
+
+          <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} />
+
           <button type="submit" onClick={this.handleSubmit}>Submit</button>
-        </div>
-        <div>
-          {data ? data.photos.map(photo => {
-            return (<img key={photo.id} src={photo.img_src} alt="" />)
-          }) : "no data found"}
+        </form>
+
+        {info ? <p className='info'>{info}</p> : <p>{info}</p>}
+
+        <div >
+
+          {!isLoading ?
+            data ?
+              data.photos.length !== 0 ?
+                <div className='images-container'> {data.photos.map(photo => {
+                  return (
+                    <div key={photo.id} className='image-container'>
+                      <img src={photo.img_src} alt="" />
+                    </div>
+
+                  )
+                })}</div> : <p className='info'> No photos on that day</p> : <p className='info'> Loading</p> : <p className='info'> Please Select Date and Camera</p>}
         </div>
       </main>
     )
