@@ -1,14 +1,42 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+body {
+  background-image: linear-gradient(
+    to right top,
+    #d16ba5,
+    #c777b9,
+    #ba83ca,
+    #aa8fd8,
+    #9a9ae1,
+    #8aa7ec,
+    #79b3f4,
+    #69bff8,
+    #52cffe,
+    #41dfff,
+    #46eefa,
+    #5ffbf1
+  );
+  min-height: 100vh;
+}
 .App {
   text-align: center;
 }
-
+h1 {
+  margin-top: 5rem;
+  color: white;
+  text-shadow: 2px 3px 0px #898999;
+}
 form {
-  background: grey;
+  background: white;
   max-width: 60rem;
   margin: 5rem auto;
   padding: 5rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 label {
   margin-bottom: 1rem;
@@ -17,12 +45,38 @@ label {
 input {
   padding: 1rem;
   margin-bottom: 1rem;
+  border-radius: 3rem;
+  width: 20rem;
+  border: none;
+  border-style: solid;
+}
+input:focus {
+  border-radius: 3rem;
+  border: 2px #52cffe, solid;
+  outline: none;
+}
+.select {
+  width: 20rem;
 }
 button {
   margin-top: 2rem;
   padding: 1rem;
   font-size: 1rem;
   font-weight: bold;
+  border-radius: 3rem;
+  transition: opacity 0.5s;
+  width: 20rem;
+}
+button:focus {
+  outline: none;
+  border-style: solid;
+}
+button:hover {
+  background: #52cffe;
+}
+.info {
+  color: white;
+  font-size: 2rem;
 }
 .images-container {
   text-align: center;

@@ -79,7 +79,7 @@ export default class Form extends Component {
 
   render() {
     const { sol, maxSol, data, isLoading } = this.state;
-    let info = '';
+
     return (
       <main>
         <h1>
@@ -94,28 +94,17 @@ export default class Form extends Component {
           <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol} />
 
           <label htmlFor="camera">Camera</label>
-          {/*  <select name="camera" id="camera" value={camera} onChange={this.handleCamera}>
-            <option value="all">All</option>
-            <option value="FHAZ">Front Hazard Avoidance Camera</option>
-            <option value="RHAZ">Rear Hazard Avoidance Camera</option>
-            <option value="MAST">Mast Camera</option>
-            <option value="CHEMCAM">Chemistry and Camera Complex</option>
-            <option value="MAHLI">Mars Hand Lens Imager</option>
-            <option value="MARDI">Mars Descent Imager</option>
-            <option value="NAVCAM">Navigation Camera</option>
-          </select> */}
-
-
-
           <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} />
 
           <button type="submit" onClick={this.handleSubmit}>Submit</button>
+
         </form>
 
-        {info ? <p className='info'>{info}</p> : <p>{info}</p>}
-
         <div >
-
+          {
+  /**
+ * TODO: Refactor loading and error component
+  */}
           {!isLoading ?
             data ?
               data.photos.length !== 0 ?
