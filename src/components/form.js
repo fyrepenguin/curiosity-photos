@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import ImagesContainer from './imagesContainer';
-const APIKEY = process.env.REACT_APP_API_KEY;
+//const APIKEY = process.env.REACT_APP_API_KEY;
 
 export default class Form extends Component {
   state = {
@@ -32,9 +32,9 @@ export default class Form extends Component {
 
   getManifest = () => {
     if (this.state.manifest === null) {
-      fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/curiosity?&api_key=${APIKEY}`)
+      fetch('/.netlify/functions/getmanifest')
         .then(res => res.json())
-        .then(resJson => this.setState({ manifest: resJson.photo_manifest, maxSol: resJson.photo_manifest.max_sol }))
+        .then(({ photo_manifest }) => this.setState({ manifest: photo_manifest, maxSol: photo_manifest.max_sol }))
         .catch(err => console.log(err))
     }
 
@@ -61,13 +61,13 @@ export default class Form extends Component {
     this.setState({ isLoading: true });
     const { sol, camera } = this.state;
     console.log("sol  " + sol, camera)
-    let url = '';
+    let url = `/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`;
 
-    if (camera === 'all') {
-      url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&api_key=${APIKEY}`;
-    } else {
-      url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&camera=${camera}&api_key=${APIKEY}`;
-    }
+    /*   if (camera === 'all') {
+        url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&api_key=${APIKEY}`;
+      } else {
+        url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&camera=${camera}&api_key=${APIKEY}`;
+      } */
 
     fetch(url)
       .then(res => res.json())
@@ -91,7 +91,7 @@ export default class Form extends Component {
 
         <form>
 
-          <label htmlFor="sol">{maxSol ? `Sol (Value from 0 to ${maxSol})` : ''}</label>
+          <label htmlFor="sol">{`Sol ${maxSol ? `(Value from  to ${maxSol})` : ''}`}</label>
           <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol} />
 
           <label htmlFor="camera">Camera</label>
