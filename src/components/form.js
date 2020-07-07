@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import ImagesContainer from './imagesContainer';
-//const APIKEY = process.env.REACT_APP_API_KEY;
 
 export default class Form extends Component {
   state = {
@@ -15,7 +14,7 @@ export default class Form extends Component {
     errors: { camera: "", sol: "" }
   }
   options = [
-    { value: 'all', label: 'All' },
+    { value: 'all', label: 'Any' },
     { value: 'FHAZ', label: 'Front Hazard Avoidance Camera' },
     { value: 'RHAZ', label: 'Rear Hazard Avoidance Camera' },
     { value: 'MAST', label: 'Mast Camera' },
@@ -26,7 +25,6 @@ export default class Form extends Component {
   ]
   async componentDidMount() {
     await this.getManifest();
-    console.log('data loaded')
   }
 
 
@@ -35,13 +33,13 @@ export default class Form extends Component {
       fetch('/.netlify/functions/getmanifest')
         .then(res => res.json())
         .then(({ photo_manifest }) => this.setState({ manifest: photo_manifest, maxSol: photo_manifest.max_sol }))
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
 
   }
   handleSol = (e) => {
     let value = e.target.value
-    if (value >= 0 && value <= this.state.maxSol) {
+    if (value >= 0 && value <= (this.state.maxSol || 2800)) {
       this.setState({ sol: value })
       //this.setCameras(value);
     }
@@ -52,7 +50,6 @@ export default class Form extends Component {
    } */
 
   handleCamera = (selected) => {
-    console.log(selected)
     this.setState({ camera: selected.value })
   }
 
@@ -60,58 +57,46 @@ export default class Form extends Component {
     e.preventDefault();
     this.setState({ isLoading: true });
     const { sol, camera } = this.state;
-    console.log("sol  " + sol, camera)
-    let url = `/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`;
 
-    /*   if (camera === 'all') {
-        url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&api_key=${APIKEY}`;
-      } else {
-        url = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&camera=${camera}&api_key=${APIKEY}`;
-      } */
-
-    fetch(url)
+    fetch(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`)
       .then(res => res.json())
       .then(resJson => {
         this.setState({ data: resJson })
       }
       )
-      .then(this.setState({ isLoading: false }))
+      .then(this.setState({ isLoading: false })).catch(err => console.error(err))
   }
 
   render() {
     const { sol, maxSol, data, isLoading } = this.state;
 
     return (
-      <main>
+      <>
         <h1>
           Mars Curiosity Rover Photo Viewer
         </h1>
-
-
-
         <form>
-
-          <label htmlFor="sol">{`Sol ${maxSol ? `(Value from  to ${maxSol})` : ''}`}</label>
-          <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol} />
+          <label htmlFor="sol">{`Sol/ Mars Solar Day ${maxSol ? `(Value from  to ${maxSol})` : ''}`}</label>
+          <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2800"} />
 
           <label htmlFor="camera">Camera</label>
           <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} />
 
           <button type="submit" onClick={this.handleSubmit}>Submit</button>
-
         </form>
-
         <main>
+
           {
-  /**
- * TODO: Refactor loading and error component
-  */}
+            /**
+           * TODO: Refactor loading and error component
+            */
+          }
           {!isLoading ?
             data ?
               data.photos.length !== 0 ?
                 <ImagesContainer data={data} /> : <p className='info'> No photos on that day with the selected camera. Try changing camera type or date</p> : <p className='info'> Loading</p> : <p className='info'> Please Select Date and Camera</p>}
         </main>
-      </main>
+      </>
     )
   }
 }
@@ -120,11 +105,3 @@ export default class Form extends Component {
 1. Curiosity didnt take any photos on the day you specified
 2. Curiosity didnt take any photos on the day with camera you specified
 */
-//https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=2015-6-3&api_key=DEMO_KEY
-/*
-  console.log(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${NasaAPIKey}`);
-
-for max_sol, max_date, landing_date and total_photos
-manifests
-
-https://api.nasa.gov/mars-photos/api/v1/manifests/curiosity?&api_key=DEMO_KEY */
