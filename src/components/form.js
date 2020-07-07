@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
+import ImagesContainer from './imagesContainer';
 const APIKEY = process.env.REACT_APP_API_KEY;
 
 export default class Form extends Component {
@@ -90,7 +91,7 @@ export default class Form extends Component {
 
         <form>
 
-          <label htmlFor="sol">{`Sol (0 to ${maxSol})`}</label>
+          <label htmlFor="sol">{maxSol ? `Sol (Value from 0 to ${maxSol})` : ''}</label>
           <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol} />
 
           <label htmlFor="camera">Camera</label>
@@ -100,7 +101,7 @@ export default class Form extends Component {
 
         </form>
 
-        <div >
+        <main>
           {
   /**
  * TODO: Refactor loading and error component
@@ -108,15 +109,8 @@ export default class Form extends Component {
           {!isLoading ?
             data ?
               data.photos.length !== 0 ?
-                <div className='images-container'> {data.photos.map(photo => {
-                  return (
-                    <div key={photo.id} className='image-container'>
-                      <img src={photo.img_src} alt="" />
-                    </div>
-
-                  )
-                })}</div> : <p className='info'> No photos on that day</p> : <p className='info'> Loading</p> : <p className='info'> Please Select Date and Camera</p>}
-        </div>
+                <ImagesContainer data={data} /> : <p className='info'> No photos on that day with the selected camera. Try changing camera type or date</p> : <p className='info'> Loading</p> : <p className='info'> Please Select Date and Camera</p>}
+        </main>
       </main>
     )
   }
