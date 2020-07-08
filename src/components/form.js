@@ -137,7 +137,10 @@ export default class Form extends Component {
 
     return (
       <>
-        <Particles style={{ position: 'absolute', top: 0, left: 0 }} params={this.params} />
+        <div className='particle-container'>
+          <Particles style={{ width: "100% !important", height: '100% !important' }} params={this.params} />
+        </div>
+
         <form>
           <label htmlFor="sol">
             {`Sol / Mars Solar Day`}
