@@ -76,6 +76,36 @@ export default class Form extends Component {
       }
     }
   }
+
+  customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      borderRadius: '0',
+      padding: '1rem',
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      borderRadius: '3rem',
+      padding: '0.5rem 0',
+      boxShadow: 'none',
+      "&:hover": {
+        border: '1px var(--bg) solid'
+      }
+    }),
+    placeholder: (provided, state) => ({
+      ...provided,
+      padding: '1rem'
+    }),
+    input: (provided, state) => ({
+      ...provided,
+      padding: '0 1rem'
+    }),
+    singleValue: (provided, state) => ({
+      ...provided,
+      paddingLeft: '1rem',
+
+    }),
+  }
   async componentDidMount() {
     await this.getManifest();
   }
@@ -150,11 +180,26 @@ export default class Form extends Component {
               {`${maxSol ? `(Value from 0 to ${maxSol})` : ''}`}
             </span>
           </label>
-          <input className={errors.sol !== '' ? 'error' : ''} type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2815"} required />
+          <input className={errors.sol !== '' ? 'error input-sol' : 'input-sol'} type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2815"} required />
           {errors.sol ? <p className='error-msg'>{errors.sol}</p> : ''}
 
           <label htmlFor="camera">Camera</label>
-          <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} required />
+          <Select
+            className='select'
+            options={this.options}
+            defaultValue={this.options[0]}
+            onChange={this.handleCamera}
+            styles={this.customStyles}
+            theme={theme => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary: 'var(--bg)',
+                primary25: 'var(--bg)',
+              }
+
+            })}
+          />
 
           <button type="submit" onClick={this.handleSubmit}>Find Photos</button>
         </form>

@@ -69,7 +69,7 @@ label {
 label span {
   font-size: 0.75rem;
 }
-input {
+.input-sol {
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 3rem;
@@ -77,15 +77,16 @@ input {
   outline: none;
   border: 1px var(--form-bg) solid;
 }
-input:focus,
+.input-sol:focus,
+.input-sol:hover,
 button:focus {
   border-radius: 3rem;
   border: 1px var(--bg) solid;
   outline: none;
 }
 
-input.error,
-input:focus.error {
+.input-sol.error,
+.input-sol:focus.error {
   border: 1px solid red;
 }
 .error-msg {
