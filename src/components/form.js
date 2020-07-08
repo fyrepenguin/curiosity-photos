@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Select from 'react-select'
 import ImagesContainer from './imagesContainer';
 import axios from 'axios';
-
+import Particles from 'react-particles-js'
 export default class Form extends Component {
 
   state = {
@@ -25,10 +25,60 @@ export default class Form extends Component {
     { value: 'MARDI', label: 'Mars Descent Imager' },
     { value: 'NAVCAM', label: 'Navigation Camera' },
   ]
+  params = {
+    "particles": {
+      "number": {
+        "value": 160,
+        "density": {
+          "enable": false
+        }
+      },
+      "size": {
+        "value": 3,
+        "random": true,
+        "anim": {
+          "speed": 4,
+          "size_min": 0.3
+        }
+      },
+      "line_linked": {
+        "enable": false
+      },
+      "move": {
+        "random": true,
+        "speed": 1,
+        "direction": "top",
+        "out_mode": "out"
+      }
+    },
+    "interactivity": {
+      "events": {
+        "onhover": {
+          "enable": true,
+          "mode": "bubble"
+        },
+        "onclick": {
+          "enable": true,
+          "mode": "repulse"
+        }
+      },
+      "modes": {
+        "bubble": {
+          "distance": 250,
+          "duration": 2,
+          "size": 0,
+          "opacity": 0
+        },
+        "repulse": {
+          "distance": 400,
+          "duration": 4
+        }
+      }
+    }
+  }
   async componentDidMount() {
     await this.getManifest();
   }
-
 
   getManifest = () => {
     if (this.state.manifest === null) {
@@ -37,11 +87,11 @@ export default class Form extends Component {
         .catch(err => console.log(err))
     }
   }
+
   handleSol = (e) => {
     let value = e.target.value
     this.setState({ sol: value })
     //this.setCameras(value);
-
   }
 
   /*  setCameras = (v) => {
@@ -61,7 +111,7 @@ export default class Form extends Component {
       this.setState({ errors: { sol: 'Sol contains invalid expressions, enter a valid number' } })
       return false;
     }
-    if (value < 0 || value >= (this.state.maxSol || 2815)) {
+    if (value < 0 || value > (this.state.maxSol || 2815)) {
       this.setState({ errors: { sol: `Sol value should be between 0 and ${this.state.maxSol ? this.state.maxSol : 2815}` } })
       return false;
     }
@@ -75,7 +125,7 @@ export default class Form extends Component {
     const { sol, camera } = this.state;
 
     if (this.validateSol(sol)) {
-      axios.get(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`)
+      axios.get(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`, { timeout: 5000 })
         .then(({ data }) => (this.setState({ data, isLoading: false })))
         .catch(err => console.log(err))
     }
@@ -87,7 +137,7 @@ export default class Form extends Component {
 
     return (
       <>
-
+        <Particles style={{ position: 'absolute', top: 0, left: 0 }} params={this.params} />
         <form>
           <label htmlFor="sol">
             {`Sol / Mars Solar Day`}
@@ -107,11 +157,6 @@ export default class Form extends Component {
 
         <main>
 
-          {
-            /**
-           * TODO: Refactor loading and error component
-            */
-          }
           {!isLoading ?
             data ?
               data.photos.length !== 0 ?
@@ -121,8 +166,3 @@ export default class Form extends Component {
     )
   }
 }
-
-/*
-1. Curiosity didnt take any photos on the day you specified
-2. Curiosity didnt take any photos on the day with camera you specified
-*/

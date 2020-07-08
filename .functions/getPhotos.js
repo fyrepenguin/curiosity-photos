@@ -12,7 +12,6 @@ exports.handler = async (event, context) => {
     API_ENDPOINT = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&api_key=${key}`;
   } else {
     API_ENDPOINT = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&page=1&camera=${camera}&api_key=${key}`;
-
   }
 
   return axios(API_ENDPOINT, {
