@@ -36,6 +36,10 @@ body {
   left: 0;
   z-index: 0;
 }
+canvas {
+  width: 100vmax !important;
+  height: 100vmax !important;
+}
 .interactive {
   z-index: 1;
   position: relative;

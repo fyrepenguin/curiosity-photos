@@ -5,7 +5,7 @@ const ImagesContainer = ({ data }) => {
     <div className='images-container'>
       {data.photos.map(photo => {
         return (
-          <div key={photo.id} className='image-container'>
+          <div key={photo.id} className='image-container interactive'>
             <img src={photo.img_src} alt="" />
           </div>
         )
