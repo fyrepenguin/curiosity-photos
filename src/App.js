@@ -4,10 +4,16 @@ import Form from './components/form';
 
 function App() {
   return (
-    <div className="App">
+    <>
+      <header>
+        <h1>
+          Mars Curiosity Rover Photo Viewer
+      </h1>
+      </header>
+
       <Form />
       <footer>Developed by <a href="https://github.com/fyrepenguin/">Mourya Prasanth</a></footer>
-    </div>
+    </>
   );
 }
 

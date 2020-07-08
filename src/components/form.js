@@ -4,6 +4,7 @@ import ImagesContainer from './imagesContainer';
 import axios from 'axios';
 
 export default class Form extends Component {
+
   state = {
     camera: 'all',
     sol: '0',
@@ -38,10 +39,9 @@ export default class Form extends Component {
   }
   handleSol = (e) => {
     let value = e.target.value
-    if (value >= 0 && value <= (this.state.maxSol || 2800)) {
-      this.setState({ sol: value })
-      //this.setCameras(value);
-    }
+    this.setState({ sol: value })
+    //this.setCameras(value);
+
   }
 
   /*  setCameras = (v) => {
@@ -52,33 +52,59 @@ export default class Form extends Component {
     this.setState({ camera: selected.value })
   }
 
+  validateSol = (value) => {
+    if (value === '') {
+      this.setState({ errors: { sol: 'Sol is empty/invalid, enter a number' } })
+      return false;
+    }
+    if (value === /D/) {
+      this.setState({ errors: { sol: 'Sol contains invalid expressions, enter a valid number' } })
+      return false;
+    }
+    if (value < 0 || value >= (this.state.maxSol || 2815)) {
+      this.setState({ errors: { sol: `Sol value should be between 0 and ${this.state.maxSol ? this.state.maxSol : 2815}` } })
+      return false;
+    }
+    this.setState({ errors: { sol: '' } })
+    return true
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ isLoading: true });
     const { sol, camera } = this.state;
 
-    axios.get(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`)
-      .then(({ data }) => (this.setState({ data, isLoading: false })))
-      .catch(err => console.log(err))
+    if (this.validateSol(sol)) {
+      axios.get(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`)
+        .then(({ data }) => (this.setState({ data, isLoading: false })))
+        .catch(err => console.log(err))
+    }
+    return
   }
 
   render() {
-    const { sol, maxSol, data, isLoading } = this.state;
+    const { sol, maxSol, data, isLoading, errors } = this.state;
 
     return (
       <>
-        <h1>
-          Mars Curiosity Rover Photo Viewer
-        </h1>
+
         <form>
-          <label htmlFor="sol">{`Sol / Mars Solar Day ${maxSol ? `(Value from 0 to ${maxSol})` : ''}`}</label>
-          <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2815"} required />
+          <label htmlFor="sol">
+            {`Sol / Mars Solar Day`}
+            <br />
+            <span>
+              {`${maxSol ? `(Value from 0 to ${maxSol})` : ''}`}
+            </span>
+          </label>
+          <input className={errors.sol !== '' ? 'error' : ''} type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2815"} required />
+          {errors.sol ? <p className='error-msg'>{errors.sol}</p> : ''}
 
           <label htmlFor="camera">Camera</label>
           <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} required />
 
           <button type="submit" onClick={this.handleSubmit}>Find Photos</button>
         </form>
+
         <main>
 
           {
