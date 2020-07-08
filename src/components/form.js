@@ -28,9 +28,9 @@ export default class Form extends Component {
   params = {
     "particles": {
       "number": {
-        "value": 160,
+        "value": 100,
         "density": {
-          "enable": false
+          "enable": true
         }
       },
       "size": {
@@ -64,10 +64,10 @@ export default class Form extends Component {
       },
       "modes": {
         "bubble": {
-          "distance": 250,
+          "distance": 50,
           "duration": 2,
           "size": 0,
-          "opacity": 0
+          "opacity": 0.5
         },
         "repulse": {
           "distance": 400,
@@ -135,13 +135,14 @@ export default class Form extends Component {
   render() {
     const { sol, maxSol, data, isLoading, errors } = this.state;
 
+
     return (
       <>
         <div className='particle-container'>
-          <Particles style={{ width: "100% !important", height: '100% !important' }} params={this.params} />
+          <Particles params={this.params} />
         </div>
 
-        <form>
+        <form className='interactive'>
           <label htmlFor="sol">
             {`Sol / Mars Solar Day`}
             <br />

@@ -15,7 +15,7 @@ function App() {
       </header>
 
       <Form />
-      <footer>Developed by <a href="https://github.com/fyrepenguin/">Mourya Prasanth</a></footer>
+      <footer className='interactive'>Developed by <a href="https://github.com/fyrepenguin/">Mourya Prasanth</a></footer>
     </>
   );
 }
