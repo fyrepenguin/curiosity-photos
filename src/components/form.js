@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import ImagesContainer from './imagesContainer';
+import axios from 'axios';
 
 export default class Form extends Component {
   state = {
@@ -30,12 +31,10 @@ export default class Form extends Component {
 
   getManifest = () => {
     if (this.state.manifest === null) {
-      fetch('/.netlify/functions/getmanifest')
-        .then(res => res.json())
-        .then(({ photo_manifest }) => this.setState({ manifest: photo_manifest, maxSol: photo_manifest.max_sol }))
-        .catch(err => console.error(err))
+      axios.get('/.netlify/functions/getmanifest')
+        .then(({ data }) => this.setState({ manifest: data.photo_manifest, maxSol: data.photo_manifest.max_sol }))
+        .catch(err => console.log(err))
     }
-
   }
   handleSol = (e) => {
     let value = e.target.value
@@ -58,13 +57,9 @@ export default class Form extends Component {
     this.setState({ isLoading: true });
     const { sol, camera } = this.state;
 
-    fetch(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`)
-      .then(res => res.json())
-      .then(resJson => {
-        this.setState({ data: resJson })
-      }
-      )
-      .then(this.setState({ isLoading: false })).catch(err => console.error(err))
+    axios.get(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`)
+      .then(({ data }) => (this.setState({ data, isLoading: false })))
+      .catch(err => console.log(err))
   }
 
   render() {
@@ -76,13 +71,13 @@ export default class Form extends Component {
           Mars Curiosity Rover Photo Viewer
         </h1>
         <form>
-          <label htmlFor="sol">{`Sol/ Mars Solar Day ${maxSol ? `(Value from  to ${maxSol})` : ''}`}</label>
-          <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2800"} />
+          <label htmlFor="sol">{`Sol / Mars Solar Day ${maxSol ? `(Value from 0 to ${maxSol})` : ''}`}</label>
+          <input type="number" onChange={this.handleSol} value={sol} name="sol" id="sol" min="0" max={maxSol || "2815"} required />
 
           <label htmlFor="camera">Camera</label>
-          <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} />
+          <Select className='select' options={this.options} defaultValue={this.options[0]} onChange={this.handleCamera} required />
 
-          <button type="submit" onClick={this.handleSubmit}>Submit</button>
+          <button type="submit" onClick={this.handleSubmit}>Find Photos</button>
         </form>
         <main>
 

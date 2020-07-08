@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <Form />
-      <footer>Developed by an Idiot</footer>
+      <footer>Developed by <a href="https://github.com/fyrepenguin/">Mourya Prasanth</a></footer>
     </div>
   );
 }

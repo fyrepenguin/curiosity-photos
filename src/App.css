@@ -64,7 +64,7 @@ input:focus {
 }
 
 button {
-  margin-top: 2rem;
+  margin-top: 3rem;
   padding: 1rem;
   font-size: 1rem;
   font-weight: bold;
@@ -102,6 +102,9 @@ button:hover {
 }
 footer {
   margin: 5rem;
+}
+a {
+  color: var(--text);
 }
 
 @media screen and (min-width: 768px) {
