@@ -70,7 +70,7 @@ label span {
   font-size: 0.75rem;
 }
 .input-sol {
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   margin-bottom: 1rem;
   border-radius: 3rem;
   width: 20rem;
@@ -115,7 +115,8 @@ button:hover {
 }
 .info {
   color: var(--text);
-  font-size: 2rem;
+  font-size: 1rem;
+  margin: 5rem 2rem;
 }
 .images-container {
   text-align: center;
@@ -155,6 +156,9 @@ a {
   }
   form {
     margin: 5rem auto;
+  }
+  .info {
+    font-size: 2rem;
   }
   .images-container {
     grid-template-columns: repeat(3, 1fr);

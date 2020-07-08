@@ -92,10 +92,6 @@ export default class Form extends Component {
         border: '1px var(--bg) solid'
       }
     }),
-    placeholder: (provided, state) => ({
-      ...provided,
-      padding: '1rem'
-    }),
     input: (provided, state) => ({
       ...provided,
       padding: '0 1rem'
@@ -103,7 +99,10 @@ export default class Form extends Component {
     singleValue: (provided, state) => ({
       ...provided,
       paddingLeft: '1rem',
-
+    }),
+    indicatorsContainer: (provided, state) => ({
+      ...provided,
+      marginRight: '1rem',
     }),
   }
   async componentDidMount() {
