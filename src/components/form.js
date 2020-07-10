@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
-import ImagesContainer from './imagesContainer';
+import ImagesData from './imagesData';
 import axios from 'axios';
 import Particles from 'react-particles-js'
 export default class Form extends Component {
@@ -10,21 +10,12 @@ export default class Form extends Component {
     sol: '0',
     manifest: null,
     maxSol: '',
-    isLoading: true,
+    isLoading: false,
     data: null,
-    page: 1,
     errors: { camera: "", sol: "" }
   }
-  options = [
-    { value: 'all', label: 'Any' },
-    { value: 'FHAZ', label: 'Front Hazard Avoidance Camera' },
-    { value: 'RHAZ', label: 'Rear Hazard Avoidance Camera' },
-    { value: 'MAST', label: 'Mast Camera' },
-    { value: 'CHEMCAM', label: 'Chemistry and Camera Complex' },
-    { value: 'MAHLI', label: 'Mars Hand Lens Imager' },
-    { value: 'MARDI', label: 'Mars Descent Imager' },
-    { value: 'NAVCAM', label: 'Navigation Camera' },
-  ]
+
+  //parameters for particles element
   params = {
     "particles": {
       "number": {
@@ -77,6 +68,19 @@ export default class Form extends Component {
     }
   }
 
+  //options for select element
+  options = [
+    { value: 'all', label: 'Any' },
+    { value: 'FHAZ', label: 'Front Hazard Avoidance Camera' },
+    { value: 'RHAZ', label: 'Rear Hazard Avoidance Camera' },
+    { value: 'MAST', label: 'Mast Camera' },
+    { value: 'CHEMCAM', label: 'Chemistry and Camera Complex' },
+    { value: 'MAHLI', label: 'Mars Hand Lens Imager' },
+    { value: 'MARDI', label: 'Mars Descent Imager' },
+    { value: 'NAVCAM', label: 'Navigation Camera' },
+  ]
+
+  //style options for select
   customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -105,6 +109,8 @@ export default class Form extends Component {
       marginRight: '1rem',
     }),
   }
+
+
   async componentDidMount() {
     await this.getManifest();
   }
@@ -205,10 +211,16 @@ export default class Form extends Component {
 
         <main>
 
-          {!isLoading ?
-            data ?
-              data.photos.length !== 0 ?
-                <ImagesContainer data={data} /> : <p className='info'> No photos on that day with the selected camera. Try changing camera type or date</p> : <p className='info'> Loading</p> : <p className='info'> Please Select Date and Camera</p>}
+          {isLoading ?
+            (<div className="spinner">
+              <div className="bounce1"></div>
+              <div className="bounce2"></div>
+              <div className="bounce3"></div>
+            </div>) :
+            <ImagesData data={data} />
+          }
+          {/*  */}
+
         </main>
       </>
     )
