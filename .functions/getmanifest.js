@@ -1,10 +1,15 @@
 
 import axios from 'axios'
 
-const key = process.env.REACT_APP_API_KEY || 'DEMO_KEY';
+import dotenv from 'dotenv'
+
+dotenv.config();
+
+
+const key = process.env.API_KEY || 'DEMO_KEY';
 const API_ENDPOINT = `https://api.nasa.gov/mars-photos/api/v1/manifests/curiosity?&api_key=${key}`;
 
-exports.handler = async (event, context) => {
+exports.handler = (event, context) => {
   return axios.get(API_ENDPOINT, {
     timeout: 5000,
   }).then(({ data }) => {

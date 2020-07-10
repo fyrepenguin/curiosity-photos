@@ -73,6 +73,7 @@ label span {
   padding: 1rem 1.5rem;
   margin-bottom: 1rem;
   border-radius: 3rem;
+  font-size: 18px;
   width: 20rem;
   outline: none;
   border: 1px var(--form-bg) solid;
