@@ -6,12 +6,11 @@
 
 :root {
   --bg: #383e56;
-  --text: white;
   --form-bg: #eedad1;
   --button-bg: #f69e7b;
-  --text: #d4b5b0;
   --text: #e07f6f;
 }
+
 html,
 body,
 #root {

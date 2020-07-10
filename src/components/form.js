@@ -156,10 +156,11 @@ export default class Form extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.setState({ isLoading: true });
+
     const { sol, camera } = this.state;
 
     if (this.validateSol(sol)) {
+      this.setState({ isLoading: true });
       axios.get(`/.netlify/functions/getPhotos?sol=${sol}&camera=${camera}`, { timeout: 5000 })
         .then(({ data }) => (this.setState({ data, isLoading: false })))
         .catch(err => console.log(err))
